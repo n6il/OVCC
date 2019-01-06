@@ -1,0 +1,7 @@
+LIBRARY profport.dll
+EXPORTS
+  GetPrivateProfileInt
+  GetPrivateProfileString
+  WritePrivateProfileString
+  WritePrivateProfileInt
+  

@@ -1,0 +1,16 @@
+LIBRARY mpi.dll
+EXPORTS
+  AssertInterupt
+  HeartBeat
+  MemPointers
+  ModuleAudioSample
+  ModuleConfig
+  ModuleName
+  ModuleReset
+  ModuleStatus
+  PakMemRead8
+  PakMemWrite8
+  PackPortRead
+  PackPortWrite
+  SetCart
+  SetIniPath

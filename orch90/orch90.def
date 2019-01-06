@@ -1,0 +1,10 @@
+LIBRARY orch90.dll
+EXPORTS
+  ModuleConfig
+  ModuleName
+  ModuleReset
+  PackPortWrite
+  PackPortRead
+  SetCart
+  PakMemRead8
+  ModuleAudioSample

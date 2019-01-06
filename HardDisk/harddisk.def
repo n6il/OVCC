@@ -1,0 +1,10 @@
+LIBRARY harddisk.dll
+EXPORTS
+  MemPointers
+  ModuleConfig
+  ModuleName
+  ModuleStatus
+  PakMemRead8
+  PackPortWrite
+  PackPortRead
+  SetIniPath
