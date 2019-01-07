@@ -35,8 +35,8 @@ This file is part of VCC (Virtual Color Computer).
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/fd.h>
-#include <linux/fdreg.h>
+// #include <linux/fd.h>
+// #include <linux/fdreg.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -73,10 +73,10 @@ unsigned short ccitt_crc16(unsigned short crc, const unsigned char *, unsigned s
 long GetSectorInfo (SectorInfo *,unsigned char *);
 void CommandDone(void);
 FILE* OpenKeyboardDevice(int *ErrorNumber);
-int CloseKeyboardDevice(HANDLE);
+int CloseKeyboardDevice();
 extern unsigned char PhysicalDriveA,PhysicalDriveB;
 bool FormatTrack (FILE *, u_int8_t, u_int8_t, u_int8_t);
-bool CmdFormat (HANDLE , PFD_FORMAT_PARAMS , ULONG );
+// bool CmdFormat (HANDLE , PFD_FORMAT_PARAMS , ULONG );
 /**********************************************************/
 static unsigned char StepTimesMS[4]={6,12,20,30};
 static unsigned short BytesperSector[4]={128,256,512,1024};

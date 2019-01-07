@@ -39,6 +39,8 @@ void ADDCALL ModuleName(char *, AG_MenuItem *);
 void ADDCALL ModuleConfig(unsigned char);
 void ADDCALL PackPortWrite(unsigned char, unsigned char);
 unsigned char ADDCALL PackPortRead(unsigned char);
+typedef unsigned char (*MEMREAD8)(unsigned short);
+typedef void (*MEMWRITE8)(unsigned char,unsigned short);
 void ADDCALL MemPointers(MEMREAD8, MEMWRITE8);
 unsigned char ADDCALL PakMemRead8 (unsigned short);
 void ADDCALL ModuleStatus (char *);

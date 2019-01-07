@@ -35,17 +35,17 @@ LDFLAGS=-shared $(PTHREAD) $(LIBS) #-Wl,--out-implib,libharddisk.a # -export-dyn
 
 UNUSEDOBJS= 
 
-_OBJS=	mpi.o fileops.o
+_OBJS=	mpi.o fileops.o profport.o
 OBJS= $(patsubst %,$(ODIR)/%,$(_OBJS))
 
 testlib: obj/testlib.o libmpi.so
-	$(LD) -o $@ $< -lprofport -ldl `sdl2-config --libs` `agar-config --libs`
+	$(LD) -o $@ $< -ldl `sdl2-config --libs` `agar-config --libs`
 
 $(ODIR)/testlib.o: testlib.c
 	$(CC) -O0 -g -c -I /usr/local/include/agar $< -o $@
 
 libmpi.so: $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) -lprofport `sdl2-config --libs` `agar-config --libs` -o $@ 
+	$(LD) $(LDFLAGS) $(OBJS) `sdl2-config --libs` `agar-config --libs` -o $@ 
     
 $(ODIR)/mpi.o: mpi.c mpi.h ../CoCo/fileops.h
 	$(CC) -c $(CCFLAGS) $< -o $@
@@ -53,6 +53,9 @@ $(ODIR)/mpi.o: mpi.c mpi.h ../CoCo/fileops.h
 $(ODIR)/fileops.o: ../CoCo/fileops.c ../CoCo/fileops.h
 	$(CC) -c $(CCFLAGS) $< -o $@
     
+$(ODIR)/profport.o: ../CoCo/profport.c ../CoCo/profport.h
+	$(CC) $(CCFLAGS) -c $< -o $@
+
 clean:
 	rm -f $(ODIR)/*.o $(TARGET) libmpi.so
 
