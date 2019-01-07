@@ -87,6 +87,9 @@ static void (*ModuleReset) (void)=NULL;
 static void (*SetIniPath) (char *)=NULL;
 static void (*PakSetCart)(SETCART)=NULL;
 
+// build fixes by n6il
+void UpdateCartridgeMenu(char *modname);
+
 
 static char Did=0;
 int FileID(char *);
@@ -215,9 +218,12 @@ int InsertModule (char *ModulePath)
 		//char *error = dlerror();
 		hinstLib = SDL_LoadObject(Modname);
 		if (hinstLib ==NULL)
+		{
+			fprintf(stderr, "Unable To Find Module : %s\n", Modname);
 			return(NOMODULE);
+		}
 		strncpy(Modname, ModulePath, MAX_PATH);
-		//fprintf(stderr, "Insert Module : Found module\n");
+		fprintf(stderr, "Insert Module : Found module\n");
 		SetCart(0);
 		GetModuleName = SDL_LoadFunction(hinstLib, "ModuleName");
 		ConfigModule = SDL_LoadFunction(hinstLib, "ModuleConfig");
@@ -438,6 +444,7 @@ int FileID(char *Filename)
 	FILE *DummyHandle=NULL;
 	char elf[5] = { 0x7f, 'E', 'L', 'F', 0 };
 	char pe[4] = { 'M', 'Z', 0220, 0 };
+	char mach[5] = { 0xcf, 0xfa, 0xed, 0xfe, 0 };
 	char *match = NULL;
 	char Temp[5]="";
 	char *Platform = SDL_GetPlatform();
@@ -449,6 +456,10 @@ int FileID(char *Filename)
 	else if (strcmp(Platform, "Windows") == 0)
 	{
 		match = pe;
+	}
+	else if (strcmp(Platform, "Mac OS X") == 0)
+	{
+		match = mach;
 	}
 
 	if (match == NULL)
