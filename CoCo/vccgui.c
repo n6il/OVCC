@@ -27,6 +27,9 @@ This file is part of VCC (Virtual Color Computer).
 #include "joystickinputSDL.h"
 #include "sdl2driver.h"
 
+// fixes by n6il
+#define Ulong unsigned long
+
 extern STRConfig CurrentConfig;
 extern JoyStick	LeftSDL;
 extern JoyStick RightSDL;
@@ -1459,7 +1462,7 @@ void CartLoad(SystemState2 *state)
 	inLoadCart = 0;
 }
 
-void LoadPack(AG_Event *event)
+int LoadPack(AG_Event *event)
 {
     SystemState2 *state = AG_PTR(1);
 

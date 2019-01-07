@@ -48,6 +48,9 @@ static AG_DataSource *hout=NULL;
 void WritePrintMon(char *);
 static BOOL MonState=FALSE;
 
+// build fixes by n6il
+void CaptureBit(unsigned char Sample);
+
 //static unsigned char CoutSample=0;
 //extern STRConfig CurrentConfig;
 // Shift Row Col
