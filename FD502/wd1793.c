@@ -42,7 +42,7 @@ This file is part of VCC (Virtual Color Computer).
 #include <sys/ioctl.h>
 // #include <linux/fd.h>
 // #include <linux/fdreg.h>
-
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
