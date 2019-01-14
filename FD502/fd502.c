@@ -33,7 +33,7 @@ This file is part of VCC (Virtual Color Computer).
 
 #define EXTROMSIZE 16384
 
-static char moduleName[6] = { "FD502" };
+static char moduleName[6] = { "FD502 26-133" };
 
 extern int WritePrivateProfileString(char *, char *, char *, char *);
 extern int GetPrivateProfileString(char *, char *, char *, char *, int, char *);
@@ -104,7 +104,7 @@ void __attribute__ ((destructor)) cleanUpLibrary(void) {
 }
 
 
-void ModuleName(char *ModName, AG_MenuItem *Temp)
+void ADDCALL ModuleName(char *ModName, AG_MenuItem *Temp)
 {
 
 	menuAnchor = Temp;
@@ -118,7 +118,7 @@ void ModuleName(char *ModName, AG_MenuItem *Temp)
 	return ;
 }
 
-void ModuleConfig(unsigned char func)
+void ADDCALL ModuleConfig(unsigned char func)
 {
 	switch (func)
 	{
@@ -146,7 +146,7 @@ void ModuleConfig(unsigned char func)
 	return;
 }
 
-void SetIniPath (char *IniFilePath)
+void ADDCALL SetIniPath (char *IniFilePath)
 {
 	strcpy(IniFile,IniFilePath);
 	LoadConfig();
@@ -154,13 +154,13 @@ void SetIniPath (char *IniFilePath)
 }
 
 // This captures the Fuction transfer point for the CPU assert interupt 
-void AssertInterupt(ASSERTINTERUPT Dummy)
+void ADDCALL AssertInterupt(ASSERTINTERUPT Dummy)
 {
 	AssertInt=Dummy;
 	return;
 }
 
-void PackPortWrite(unsigned char Port, unsigned char Data)
+void ADDCALL PackPortWrite(unsigned char Port, unsigned char Data)
 {
 	if ( ((Port == 0x50) | (Port==0x51)) & ClockEnabled)
 		write_time(Data,Port);
@@ -169,14 +169,14 @@ void PackPortWrite(unsigned char Port, unsigned char Data)
 	return;
 }
 
-unsigned char PackPortRead(unsigned char Port)
+unsigned char ADDCALL PackPortRead(unsigned char Port)
 {
 	if ( ((Port == 0x50) | (Port==0x51)) & ClockEnabled)
 		return(read_time(Port));
 	return(disk_io_read(Port));
 }
 
-void HeartBeat(void)
+void ADDCALL HeartBeat(void)
 {
 	PingFdc();
 	return;
@@ -211,7 +211,7 @@ extern "C"
 }
 */
 
-void ModuleStatus(char *MyStatus)
+void ADDCALL ModuleStatus(char *MyStatus)
 {
 	DiskStatus(MyStatus);
 	return ;

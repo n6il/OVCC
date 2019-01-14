@@ -42,7 +42,7 @@ $(ODIR)/testlib.o: testlib.c
 	$(CC) -O0 -g -c $(SDLINC) $< -o $@
 
 harddisk.dll: $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) harddisk.def $(LIBS) -o $@ 
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o $@ 
     
 $(ODIR)/harddisk.o: harddisk.c harddisk.h defines.h cloud9.h ../CoCo/fileops.h
 	$(CC) -c $(CCFLAGS) $< -o $@
@@ -64,3 +64,6 @@ clean:
 
 install:
 	cp harddisk.dll ../CoCo
+
+test:
+	.\testlib.exe harddisk.dll ModuleName

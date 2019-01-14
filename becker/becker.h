@@ -1,6 +1,12 @@
 #ifndef __BECKER_H__
 #define __BECKER_H__
 
+#ifdef __MINGW32__
+#define ADDCALL __cdecl
+#else
+#define ADDCALL
+#endif
+
 // functions
 void MemWrite(unsigned char,unsigned short );
 unsigned char MemRead(unsigned short );

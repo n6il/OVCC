@@ -20,6 +20,12 @@ This file is part of VCC (Virtual Color Computer).
 #include <string.h>
 #include "memboard.h"
 
+#ifdef __MINGW32__
+#define ADDCALL __cdecl
+#else
+#define ADDCALL
+#endif
+
 static char moduleName[8] = { "ramdisk" };
 
 typedef unsigned char (*MEMREAD8)(unsigned short);
@@ -46,14 +52,14 @@ void __attribute__ ((destructor)) cleanUpLibrary(void) {
  //   printf("ramdisk is exited\n"); 
 }
 
-void ModuleName(char *ModName, void *Temp)
+void ADDCALL ModuleName(char *ModName, void *Temp)
 {
 	ModName = strcpy(ModName, moduleName);
 	InitMemBoard();	
 	return ;
 }
 
-void PackPortWrite(unsigned char Port,unsigned char Data)
+void ADDCALL PackPortWrite(unsigned char Port,unsigned char Data)
 {
 	switch (Port)
 	{
@@ -76,7 +82,7 @@ void PackPortWrite(unsigned char Port,unsigned char Data)
 	return;
 }
 
-unsigned char PackPortRead(unsigned char Port)
+unsigned char ADDCALL PackPortRead(unsigned char Port)
 {
 	switch (Port)
 	{

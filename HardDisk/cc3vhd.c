@@ -74,7 +74,6 @@ typedef union
 
 } Address;
 
-//static AG_DataSource *HardDrive= NULL ;
 static FILE *HardDrive= NULL ;
 static SECOFF SectorOffset;
 static Address DMAaddress;
@@ -97,13 +96,19 @@ int MountHD(char FileName[MAX_PATH])
 	Status = HD_OK;
 	SectorOffset.All = 0;
 	DMAaddress.word = 0;
-	// HardDrive = AG_OpenFile(FileName, "r+");
+#ifdef __MINGW32__
 	HardDrive = fopen(FileName, "rb+");
+#else
+	HardDrive = fopen(FileName, "r+");
+#endif
 
 	if (HardDrive == NULL)	//Can't open read/write. try read only
 	{
-		//HardDrive = AG_OpenFile(FileName, "r");
+#ifdef __MINGW32__
 		HardDrive = fopen(FileName, "rb");
+#else
+		HardDrive = fopen(FileName, "r");
+#endif
 		WpHD=1;
 	}
 
@@ -122,7 +127,6 @@ void UnmountHD(void)
 {
 	if (HardDrive != NULL)
 	{
-		// AG_CloseFile(HardDrive);
 		fclose(HardDrive);
 		HardDrive = NULL;
 		Mounted = 0;
@@ -150,8 +154,6 @@ void HDcommand(unsigned char Command)
 			return;
 		}
 
-		// AG_Seek(HardDrive, (off_t)SectorOffset.All, AG_SEEK_SET);
-		// AG_ReadP(HardDrive, SectorBuffer, SECTORSIZE, &BytesMoved);
 		fseek(HardDrive, (off_t)SectorOffset.All, SEEK_SET);
 		BytesMoved = fread(SectorBuffer, 1, SECTORSIZE, HardDrive);
 
@@ -178,8 +180,6 @@ void HDcommand(unsigned char Command)
 		for (Temp=0; Temp <SECTORSIZE;Temp++)
 			SectorBuffer[Temp]=MemRead(Temp+DMAaddress.word);
 
-		// AG_Seek(HardDrive, (off_t)SectorOffset.All, AG_SEEK_SET);
-		// AG_WriteP(HardDrive, SectorBuffer, SECTORSIZE, &BytesMoved);
 		fseek(HardDrive, (off_t)SectorOffset.All, SEEK_SET);
 		BytesMoved = fwrite(SectorBuffer, 1, SECTORSIZE, HardDrive);
 		Status = HD_OK;

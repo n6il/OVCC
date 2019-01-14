@@ -284,6 +284,8 @@ unsigned char ADDCALL ModuleReset(void)
 		
 		if (ModuleResetCalls[Temp] !=NULL)
 			ModuleResetCalls[Temp]();
+
+		ModuleResetCalls[Temp] = NULL;
 	}
 	PakSetCart(0);
 	if (CartForSlot[SpareSelectSlot]==1)
@@ -519,7 +521,7 @@ void UnloadModule(unsigned char Slot)
 	strcpy(CatNumber[Slot],"");
 	strcpy(SlotLabel[Slot],"Empty");
 	if (hinstLib[Slot] !=NULL)
-		AG_UnloadDSO(hinstLib[Slot]); 
+		SDL_UnloadObject(hinstLib[Slot]); 
 	if (ExtRomPointers[Slot] !=NULL)
 		free(ExtRomPointers[Slot]);
 	hinstLib[Slot]=NULL;

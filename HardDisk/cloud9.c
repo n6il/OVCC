@@ -80,9 +80,9 @@ unsigned char ReadTime(unsigned short port)
 			OutBuffer<<=4;
 			OutBuffer|=now->tm_year%10;
 			OutBuffer<<=4;
-			OutBuffer|=now->tm_mon/10;
+			OutBuffer|=(now->tm_mon+1)/10;
 			OutBuffer<<=4;
-			OutBuffer|=now->tm_mon%10;
+			OutBuffer|=(now->tm_mon+1)%10;
 			OutBuffer<<=4;
 			OutBuffer|=now->tm_mday/10;
 			OutBuffer<<=4;
@@ -180,9 +180,9 @@ void SetTime(void)
 	InBuffer>>=4;
 	now->tm_mday+=(unsigned short)((InBuffer & 15)*10);
 	InBuffer>>=4;	
-	now->tm_mon=(unsigned short)(InBuffer & 15);
+	now->tm_mon=(unsigned short)((InBuffer & 15)-1);
 	InBuffer>>=4;
-	now->tm_mon+=(unsigned short)((InBuffer & 15)*10);
+	now->tm_mon+=(unsigned short)(((InBuffer & 15)-1)*10);
 	InBuffer>>=4;
 	now->tm_year=(unsigned short)(InBuffer & 15);
 	InBuffer>>=4;

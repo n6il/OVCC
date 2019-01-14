@@ -4,9 +4,13 @@
 #include <agar/gui.h>
 #include <stdio.h>
 #include <sys/types.h>
+#ifdef __MINGW32__
+#include <winsock2.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#endif
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
@@ -14,7 +18,9 @@
 
 #define MAX_PATH 260
 
+#ifndef __MINGW32__
 typedef int boolean;
+#endif
 typedef int BOOL;
 
 static char moduleName[17] = { "HDBDOS/DW/Becker" };
@@ -82,14 +88,14 @@ void __attribute__ ((constructor)) initLibrary(void) {
  //
  // Function that is called when the library is loaded
  //
-    printf("becker is initialized\n"); 
+ //   printf("becker is initialized\n"); 
 }
 
 void __attribute__ ((destructor)) cleanUpLibrary(void) {
  //
  // Function that is called when the library is »closed«.
  //
-    printf("becker is exited\n"); 
+ //   printf("becker is exited\n"); 
 }
 
 // coco checks for data
@@ -130,7 +136,11 @@ int dw_write( char dwdata)
 		{
 			sprintf(msg,"dw_write: socket error\n");
 			fprintf(stderr, msg);
+#ifdef __MINGW32__
+			closesocket(dwSocket);
+#else
 			close(dwSocket);
+#endif
 			dwSocket = 0;        
 		}
 		else
@@ -151,7 +161,11 @@ void killDWTCPThread(void)
 {
 	// close socket to cause io thread to die
 	if (dwSocket != 0)
-		close(dwSocket);
+#ifdef __MINGW32__
+			closesocket(dwSocket);
+#else
+			close(dwSocket);
+#endif
 
 	dwSocket = 0;
 	
@@ -207,8 +221,11 @@ void attemptDWConnection( void )
 	}
 	
 	// allocate socket
+#ifdef __MINGW32__
+	dwSocket = socket (AF_INET,SOCK_STREAM,IPPROTO_TCP);
+#else
 	dwSocket = socket (AF_INET,SOCK_STREAM,0);
-
+#endif
 	if (dwSocket == -1)
 	{
 		// no deal
@@ -217,26 +234,48 @@ void attemptDWConnection( void )
 	}
 
 	// set options
+#ifdef __MINGW32__
+	setsockopt(dwSocket,IPPROTO_TCP,SO_REUSEADDR,(char *)&bOptValTrue,sizeof(bOptValTrue));
+	setsockopt(dwSocket,IPPROTO_TCP,TCP_NODELAY,(char *)&iOptValTrue,sizeof(iOptValTrue));  
+#else
 	setsockopt(dwSocket,SOL_SOCKET,SO_REUSEADDR,(char *)&bOptValTrue,sizeof(bOptValTrue));
 	//setsockopt(dwSocket,SOL_SOCKET,TCP_NODELAY,(char *)&iOptValTrue,sizeof(iOptValTrue));  
-
+#endif
 	// build server address
+
+#ifdef __MINGW32__
+	SOCKADDR_IN dwSrvAddress;
+#else
 	struct sockaddr_in dwSrvAddress;
+#endif
 
 	dwSrvAddress.sin_family = AF_INET;
 	dwSrvAddress.sin_addr = *((struct in_addr*)*dwSrvHost->h_addr_list);
 	dwSrvAddress.sin_port = htons(dwsport);
 	
 	// try to connect...
+
+#ifdef __MINGW32__
+	int rc = connect(dwSocket, (LPSOCKADDR)&dwSrvAddress, sizeof(dwSrvAddress));
+#else
 	int rc = connect(dwSocket, &dwSrvAddress, sizeof(dwSrvAddress));
+#endif
 
 	retry = false;
 
+#ifdef __MINGW32__
+	if (rc==SOCKET_ERROR)
+#else
 	if (rc==-1)
+#endif
 	{
 		// no deal
 //              WriteLog("failed to connect.\n",TOCONS);
+#ifdef __MINGW32__
+		closesocket(dwSocket);
+#else
 		close(dwSocket);
+#endif
 		dwSocket = 0;
 	}
 	
@@ -245,19 +284,24 @@ void attemptDWConnection( void )
 // TCP connection thread
 unsigned  DWTCPThread(void)
 {
-	//WSADATA wsaData;
-	
+#ifdef __MINGW32__
+	WSADATA wsaData;
+#endif
+
 	int sz;
 	int res;
 
 		// Request Winsock version 2.2
-	// if ((WSAStartup(0x202, &wsaData)) != 0)
-	// {
-	// 	WriteLog("WSAStartup() failed, DWTCPConnection thread exiting\n",TOCONS);
-	// 	WSACleanup();
-	// 	return(0);
-	// }
-	
+
+#ifdef __MINGW32__
+	if ((WSAStartup(0x202, &wsaData)) != 0)
+	{
+		fprintf(stderr, "WSAStartup() failed, DWTCPConnection thread exiting\n");
+		WSACleanup();
+		return(0);
+	}
+#endif
+
 	while(DWTCPEnabled)
 	{
 		// get connected
@@ -291,7 +335,11 @@ unsigned  DWTCPThread(void)
 			if (res < 1)
 			{
 				// no good, bail out
+#ifdef __MINGW32__
+				closesocket(dwSocket);
+#else
 				close(dwSocket);
+#endif
 				dwSocket = 0;
 			} 
 			else
@@ -309,7 +357,11 @@ unsigned  DWTCPThread(void)
 
 	// close socket if necessary
 	if (dwSocket != 0)
+#ifdef __MINGW32__
+		closesocket(dwSocket);
+#else
 		close(dwSocket);
+#endif
 			
 	dwSocket = 0;
 
@@ -357,7 +409,7 @@ void SetDWTCPConnectionEnable(unsigned int enable)
 
 // dll exported functions
 
-void ModuleName(char *ModName, AG_MenuItem *Temp)
+void ADDCALL ModuleName(char *ModName, AG_MenuItem *Temp)
 {
 
 	menuAnchor = Temp;
@@ -371,7 +423,7 @@ void ModuleName(char *ModName, AG_MenuItem *Temp)
 	return ;
 }
 
-void PackPortWrite(unsigned char Port,unsigned char Data)
+void ADDCALL PackPortWrite(unsigned char Port,unsigned char Data)
 {
 	switch (Port)
 	{
@@ -383,7 +435,7 @@ void PackPortWrite(unsigned char Port,unsigned char Data)
 	return;
 }
 
-unsigned char PackPortRead(unsigned char Port)
+unsigned char ADDCALL PackPortRead(unsigned char Port)
 {
 	switch (Port)
 	{
@@ -410,14 +462,14 @@ unsigned char PackPortRead(unsigned char Port)
 		return(0);
 	}
 */
-unsigned char SetCart(SETCART Pointer)
+unsigned char ADDCALL SetCart(SETCART Pointer)
 {
 	
 	PakSetCart=Pointer;
 	return(0);
 }
 
-unsigned char PakMemRead8(unsigned short Address)
+unsigned char ADDCALL PakMemRead8(unsigned short Address)
 {
 	//sprintf(msg,"PalMemRead8: addr %d  val %d\n",(Address & 8191), Rom[Address & 8191]);
 	//WriteLog(msg,TOCONS);
@@ -425,13 +477,13 @@ unsigned char PakMemRead8(unsigned short Address)
 
 }
 
-void HeartBeat(void)
+void ADDCALL HeartBeat(void)
 {
 	// flush write buffer in the future..?
 	return;
 }
 
-void ModuleStatus(char *DWStatus)
+void ADDCALL ModuleStatus(char *DWStatus)
 {
 	// calculate speed
 	struct timespec now;
@@ -534,7 +586,7 @@ void BuildMenu(void)
 	}
 }
 
-void ModuleConfig(unsigned char func)
+void ADDCALL ModuleConfig(unsigned char func)
 {
 	switch(func)
 	{
@@ -552,7 +604,7 @@ void ModuleConfig(unsigned char func)
 	return;
 }
 
-void SetIniPath(char *IniFilePath)
+void ADDCALL SetIniPath(char *IniFilePath)
 {
 	strcpy(IniFile,IniFilePath);
 	LoadConfig();

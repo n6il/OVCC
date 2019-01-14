@@ -44,7 +44,7 @@ $(ODIR)/testlib.o: testlib.c
 	$(CC) -O0 -g -c $(SDLINC) $< -o $@
 
 mpi.dll: $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) mpi.def $(LIBS) -o $@ 
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o $@ 
     
 $(ODIR)/mpi.o: mpi.c mpi.h ../CoCo/fileops.h
 	$(CC) -c $(CCFLAGS) $< -o $@
@@ -60,3 +60,6 @@ clean:
 
 install:
 	cp mpi.dll ../CoCo
+
+test:
+	.\testlib.exe mpi.dll ModuleName

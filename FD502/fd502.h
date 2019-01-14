@@ -17,6 +17,13 @@ This file is part of VCC (Virtual Color Computer).
     You should have received a copy of the GNU General Public License
     along with VCC (Virtual Color Computer).  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifdef __MINGW32__
+#define ADDCALL __cdecl
+#else
+#define ADDCALL
+#endif
+
 void CPUAssertInterupt(unsigned char,unsigned char);
 #define	HEAD 0
 #define SLAVE 1
