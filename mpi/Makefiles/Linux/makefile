@@ -5,8 +5,6 @@ TARGET=testlib
 CC=gcc
 # linker
 LD=gcc
-# Resource Compiler
-# RC=windres
 # debug
 DEBUG=#-g
 # optimisation
@@ -18,9 +16,9 @@ INCDIR=# -I /usr/include/boost/predef/os
 # Obj Dir
 ODIR = obj
 
-PTHREAD=#-pthread
+PTHREAD=-pthread
 
-SDLINC=#`pkg-config --cflags sdl2`
+SDLINC=`sdl2-config --cflags`
 AGARINC=`agar-config --cflags`
 IDIR=$(INCDIR) $(SDLINC) $(AGARINC)
  
@@ -30,7 +28,7 @@ SDLLIB=`sdl2-config --libs`
 AGARLIB=`agar-config --libs`
 LIBS=$(SDLLIB) $(AGARLIB)
 
-LDFLAGS=-shared $(PTHREAD) $(LIBS) #-Wl,--out-implib,libharddisk.a # -export-dynamic 
+LDFLAGS=-shared $(PTHREAD) #-Wl,--out-implib,libharddisk.a # -export-dynamic 
 
 UNUSEDOBJS= 
 
@@ -38,10 +36,10 @@ _OBJS=	mpi.o fileops.o profport.o
 OBJS= $(patsubst %,$(ODIR)/%,$(_OBJS))
 
 testlib: obj/testlib.o libmpi.so
-	$(LD) -o $@ $< -ldl $(LIBS)
+	$(LD) -o $@ $< -ldl $(SDLLIB)
 
 $(ODIR)/testlib.o: testlib.c
-	$(CC) -O0 -g -c $< -o $@
+	$(CC) -O0 -g -c $(SDLINC) $< -o $@
 
 libmpi.so: $(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o $@ 
@@ -62,3 +60,6 @@ install:
 	sudo cp libmpi.so /usr/lib
 	sudo ldconfig
 	cp libmpi.so ../CoCo
+
+test:
+	./testlib libmpi.so ModuleName

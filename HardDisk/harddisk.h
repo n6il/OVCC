@@ -29,6 +29,8 @@ This file is part of VCC (Virtual Color Computer).
 
 void MemWrite(unsigned char,unsigned short );
 unsigned char MemRead(unsigned short );
+typedef unsigned char (*MEMREAD8)(unsigned short);
+typedef void (*MEMWRITE8)(unsigned char,unsigned short);
 
 #ifdef __cplusplus
 extern "C"

@@ -20,8 +20,12 @@ This file is part of VCC (Virtual Color Computer).
 #include <agar/core.h>
 #include <agar/gui.h>
 #include <SDL2/SDL.h>
+#include <stdbool.h>
 #include "stdio.h"
 #include "mpi.h"
+#include "../CoCo/profport.h"
+#define BOOL bool
+#include "../CoCo/fileops.h"
 
 #define MAX_PATH 260
 
@@ -85,6 +89,8 @@ void WriteConfig(void);
 void ReadModuleParms(unsigned char,char *);
 int FileID(char *);
 void UpdateMenu(unsigned char);
+void BuildMenu(void);
+void UpdateConfig(unsigned char);
 
 AG_MenuItem *menuAnchor = NULL;
 AG_MenuItem *itemMenu[MAXPAX] = { NULL,NULL,NULL,NULL };
@@ -741,7 +747,7 @@ void UnloadSlot(AG_Event *event)
 	UpdateMenu(slot);
 }
 
-void BuildMenu()
+void BuildMenu(void)
 {
 	int slot = 0;
 	char slotname[128];

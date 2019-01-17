@@ -20,7 +20,7 @@ ODIR = obj
 
 PTHREAD=-pthread
 
-SDLINC=`pkg-config --cflags sdl2`
+SDLINC=`sdl2-config --cflags`
 AGARINC=`agar-config --cflags`
 IDIR=$(INCDIR) $(SDLINC) $(AGARINC)
  
@@ -30,7 +30,7 @@ SDLLIB= `sdl2-config --libs`
 AGARLIB= `agar-config --libs`
 LIBS=$(SDLLIB) $(AGARLIB)
 
-LDFLAGS=-shared $(PTHREAD) $(LIBS) #-mwindows -Wl,-export-all-symbols -Wl,--out-implib,libsuperide.a # -export-dynamic 
+LDFLAGS=-shared $(PTHREAD)  #-mwindows -Wl,-export-all-symbols -Wl,--out-implib,libsuperide.a # -export-dynamic 
 
 UNUSEDOBJS= 
 
@@ -38,7 +38,7 @@ _OBJS=	superide.o cloud9.o fileops.o idebus.o logger.o profport.o
 OBJS= $(patsubst %,$(ODIR)/%,$(_OBJS))
 
 testlib: obj/testlib.o libsuperide.so
-	$(LD) -o $@ $< $(LIBS)
+	$(LD) -o $@ $< $(SDLLIB)
 
 $(ODIR)/testlib.o: testlib.c
 	$(CC) -O0 -g -c $< -o $@
@@ -71,3 +71,6 @@ install:
 	sudo cp libsuperide.so /usr/lib
 	sudo ldconfig
 	cp libsuperide.so ../CoCo
+
+test:
+	./testlib libsuperide.so ModuleName

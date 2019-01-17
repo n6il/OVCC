@@ -68,3 +68,6 @@ install:
 	sudo cp libfd502.so /usr/lib
 	sudo ldconfig
 	cp libfd502.so ../CoCo
+
+test:
+	./testlib libfd502.so ModuleName

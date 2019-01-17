@@ -59,3 +59,6 @@ install:
 	sudo cp libbecker.so /usr/lib
 	sudo ldconfig
 	cp libbecker.so ../CoCo
+
+test:
+	./testlib libbecker.so ModuleName

@@ -1,6 +1,7 @@
 /***** Routines to read profile strings --  by Joseph J. Graf ******/
 
 #include <stdio.h>
+#include <unistd.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>

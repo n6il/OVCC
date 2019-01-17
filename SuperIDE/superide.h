@@ -21,4 +21,10 @@ This file is part of VCC (Virtual Color Computer).
 #define SLAVE 1
 #define STANDALONE 2
 
+#ifdef __MINGW32__
+#define ADDCALL __cdecl
+#else
+#define ADDCALL
+#endif
+
 #endif

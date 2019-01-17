@@ -43,8 +43,8 @@ bool CreateSDLWindow(SystemState2 *CWState)
 
     if (AG_InitCore(NULL, 0) == -1 || AG_InitGraphics("sdl2") == -1)
     {
-        fprintf(stderr, "Init failed: %\n", AG_GetError());
-        return FALSE;
+        fprintf(stderr, "Init failed: %s\n", AG_GetError());
+        return (1);
     }
 
     CWState->agwin = AG_WindowNew(AG_WINDOW_MAIN);

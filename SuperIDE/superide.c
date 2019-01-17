@@ -71,17 +71,17 @@ void __attribute__ ((constructor)) initLibrary(void) {
  //
  // Function that is called when the library is loaded
  //
-    printf("%s is initialized\n", moduleName); 
+ //   printf("%s is initialized\n", moduleName); 
 }
 
 void __attribute__ ((destructor)) cleanUpLibrary(void) {
  //
  // Function that is called when the library is »closed«.
  //
-    printf("%s is exited\n", moduleName); 
+ //   printf("%s is exited\n", moduleName); 
 }
 
-void ModuleName(char *ModName, AG_MenuItem *Temp)
+void ADDCALL ModuleName(char *ModName, AG_MenuItem *Temp)
 {
 
 	menuAnchor = Temp;
@@ -96,7 +96,7 @@ void ModuleName(char *ModName, AG_MenuItem *Temp)
 	return ;
 }
 
-void PackPortWrite(unsigned char Port,unsigned char Data)
+void ADDCALL PackPortWrite(unsigned char Port,unsigned char Data)
 {
 	if ( (Port >=BaseAddress) & (Port <= (BaseAddress+8)))
 		switch (Port-BaseAddress)
@@ -116,7 +116,7 @@ void PackPortWrite(unsigned char Port,unsigned char Data)
 	return;
 }
 
-unsigned char PackPortRead(unsigned char Port)
+unsigned char ADDCALL PackPortRead(unsigned char Port)
 {
 	unsigned char RetVal=0;
 	unsigned short Temp=0;
@@ -146,13 +146,13 @@ unsigned char PackPortRead(unsigned char Port)
 	return(RetVal);
 }
 
-void ModuleStatus(char *MyStatus)
+void ADDCALL ModuleStatus(char *MyStatus)
 {
 	DiskStatus(MyStatus);
 	return ;
 }
 
-void ModuleConfig(unsigned char func)
+void ADDCALL ModuleConfig(unsigned char func)
 {
 	switch (func)
 	{
@@ -170,7 +170,7 @@ void ModuleConfig(unsigned char func)
 	return;
 }
 
-void SetIniPath (char *IniFilePath)
+void ADDCALL SetIniPath (char *IniFilePath)
 {
 	strcpy(IniFile, IniFilePath);
 	LoadConfig();

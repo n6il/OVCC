@@ -25,6 +25,7 @@ This file is part of VCC (Virtual Color Computer).
 ************************************************************************/
 
 #include <time.h>
+#include <stdint.h>
 #include "cloud9.h"
 
 #ifndef CLOCK_REALTIME
@@ -35,9 +36,9 @@ static time_t rawtime;
 static struct timespec tspec;
 static struct tm *now;
 static unsigned char time_register=0;
-static __uint64_t InBuffer=0;
-static __uint64_t OutBuffer=0;
-static __uint64_t CurrentBit=0;
+static uint64_t InBuffer=0;
+static uint64_t OutBuffer=0;
+static uint64_t CurrentBit=0;
 static unsigned char BitCounter=0;
 static unsigned char TempHour=0;
 static unsigned char AmPmBit=0;
@@ -79,9 +80,9 @@ unsigned char ReadTime(unsigned short port)
 			OutBuffer<<=4;
 			OutBuffer|=now->tm_year%10;
 			OutBuffer<<=4;
-			OutBuffer|=now->tm_mon/10;
+			OutBuffer|=(now->tm_mon+1)/10;
 			OutBuffer<<=4;
-			OutBuffer|=now->tm_mon%10;
+			OutBuffer|=(now->tm_mon+1)%10;
 			OutBuffer<<=4;
 			OutBuffer|=now->tm_mday/10;
 			OutBuffer<<=4;
@@ -179,9 +180,9 @@ void SetTime(void)
 	InBuffer>>=4;
 	now->tm_mday+=(unsigned short)((InBuffer & 15)*10);
 	InBuffer>>=4;	
-	now->tm_mon=(unsigned short)(InBuffer & 15);
+	now->tm_mon=(unsigned short)((InBuffer & 15)-1);
 	InBuffer>>=4;
-	now->tm_mon+=(unsigned short)((InBuffer & 15)*10);
+	now->tm_mon+=(unsigned short)(((InBuffer & 15)-1)*10);
 	InBuffer>>=4;
 	now->tm_year=(unsigned short)(InBuffer & 15);
 	InBuffer>>=4;

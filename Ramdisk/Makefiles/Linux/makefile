@@ -20,18 +20,18 @@ ODIR = obj
 
 PTHREAD=#-pthread
 
-SDLINC=#`pkg-config --cflags sdl2`
+SDLINC=`sdl2-config --cflags`
 AGARINC=`agar-config --cflags`
 IDIR=$(INCDIR) $(SDLINC) $(AGARINC)
  
 CCFLAGS=$(IDIR) $(DEBUG) $(OPT) $(WARN) -fPIC
  
-SDLLIB=#`sdl2-config --libs`
-AGARLIB=#`agar-config --libs`
+SDLLIB=`sdl2-config --libs`
+AGARLIB=`agar-config --libs`
 POSSIBLE_LIBS= -lm -lWinmm -lgdi32 -ldxguid -lddraw -ldsound -ldinput -ldinput8 -lComctl32 -lole32
 LIBS=$(SDLLIB) $(AGARLIB)
 
-LDFLAGS=-shared $(PTHREAD) $(LIBS) #-Wl,--out-implib,libharddisk.a # -export-dynamic 
+LDFLAGS=-shared $(PTHREAD)  #-Wl,--out-implib,libharddisk.a # -export-dynamic 
 
 UNUSEDOBJS= 
 
@@ -39,13 +39,13 @@ _OBJS=	ramdisk.o memboard.o
 OBJS= $(patsubst %,$(ODIR)/%,$(_OBJS))
 
 testlib: obj/testlib.o libramdisk.so
-	$(LD) -o $@ $< -lprofport -ldl `sdl2-config --libs` `agar-config --libs`
+	$(LD) -o $@ $< $(SDLLIB)
 
 $(ODIR)/testlib.o: testlib.c
-	$(CC) -O0 -g -c -I /usr/local/include/agar $< -o $@
+	$(CC) -O0 -g -c $< -o $@
 
 libramdisk.so: $(OBJS)
-	$(LD) $(LDFLAGS) $(OBJS) `sdl2-config --libs` `agar-config --libs` -o $@ 
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o $@ 
     
 $(ODIR)/ramdisk.o: ramdisk.c memboard.h
 	$(CC) -c $(CCFLAGS) $< -o $@
@@ -60,3 +60,6 @@ install:
 	sudo cp libramdisk.so /usr/lib
 	sudo ldconfig
 	cp libramdisk.so ../CoCo
+
+test:
+	./testlib libramdisk.so ModuleName
