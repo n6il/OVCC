@@ -53,7 +53,7 @@ $(ODIR)/profport.o: ../CoCo/profport.c ../CoCo/profport.h
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(ODIR)/*.o $(TARGET) libmpi.so
+	rm -f $(ODIR)/*.o $(TARGET) libbecker.so
 
 install:
 	sudo cp libbecker.so /usr/lib

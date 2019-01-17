@@ -1,5 +1,5 @@
 # change application name here (executable output name)
-TARGET=superide.dll
+TARGET=libsuperide.so
  
 # compiler
 CC=gcc
