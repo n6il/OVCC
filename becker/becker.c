@@ -568,9 +568,9 @@ void LoadConfig(void)
 	char DiskRomPath[MAX_PATH]="hdbdwbck.rom";
 	sprintf(stderr, "Rom Path1: %s\n", DiskRomPath); 
 
-	GetPrivateProfileString(moduleName,"DWServerAddr","",saddr,MAX_PATH,IniFile);
+	GetPrivateProfileString(moduleName,"DWServerAddr","",saddr,MAX_LOADSTRING,IniFile);
 	sprintf(stderr, "Got saddr: %s\n", saddr); 
-	GetPrivateProfileString(moduleName,"DWServerPort","",sport,MAX_PATH,IniFile);
+	GetPrivateProfileString(moduleName,"DWServerPort","",sport,MAX_LOADSTRING,IniFile);
 	sprintf(stderr, "Got sport: %s\n", sport); 
 	
 	if (strlen(saddr) > 0)
