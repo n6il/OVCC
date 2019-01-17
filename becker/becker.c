@@ -617,36 +617,23 @@ void LoadConfig(void)
 {
 	char saddr[MAX_LOADSTRING]="";
 	char sport[MAX_LOADSTRING]="";
-	char DiskRomPath[MAX_PATH]="hdbdwbck.rom";
-	sprintf(stderr, "Rom Path1: %s\n", DiskRomPath); 
+	char DiskRomPath[MAX_PATH]="";
 
-<<<<<<< HEAD
-	GetPrivateProfileString(moduleName,"DWServerAddr","",saddr,MAX_PATH,IniFile);
-	sprintf(stderr, "Got saddr: %s\n", saddr); 
-	GetPrivateProfileString(moduleName,"DWServerPort","",sport,MAX_PATH,IniFile);
-=======
 	GetPrivateProfileString(moduleName,"DWServerAddr","",saddr,MAX_LOADSTRING,IniFile);
-	sprintf(stderr, "Got saddr: %s\n", saddr); 
 	GetPrivateProfileString(moduleName,"DWServerPort","",sport,MAX_LOADSTRING,IniFile);
->>>>>>> 8f575b10640f7364897e568361707f0d0435b3bb
-	sprintf(stderr, "Got sport: %s\n", sport); 
 	
 	if (strlen(saddr) > 0)
 		dw_setaddr(saddr);
 	else
 		dw_setaddr("127.0.0.1");
-	sprintf(stderr, "Set saddr: %s\n", saddr); 
 
 	if (strlen(sport) > 0)
 		dw_setport(sport);
 	else
 		dw_setport("65504");
-	sprintf(stderr, "Set sport: %s\n", sport); 
 	
-    //getcwd(DiskRomPath, MAX_PATH);
-	// sprintf(stderr, "Path: %s\n", DiskRomPath); 
-	// strcat(DiskRomPath, "/hdbdwbck.rom");
-	sprintf(stderr, "Rom Path2: %s\n", DiskRomPath); 
+    getcwd(DiskRomPath, MAX_PATH);
+	strcat(DiskRomPath, "/hdbdwbck.rom");
 	LoadExtRom(DiskRomPath);
 }
 
