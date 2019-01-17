@@ -24,5 +24,5 @@ cd mpi
 make -f Makefiles/Linux/makefile clean
 cd ..
 cd orch90
-make -f Makefiles/Linux/makefile clean
+make -f makefiles/Linux/makefile clean
 cd ..

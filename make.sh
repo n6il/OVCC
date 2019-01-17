@@ -45,7 +45,7 @@ cp libmpi.so ../CoCo
 cd ..
 cd orch90
 mkdir -p obj
-make -f Makefiles/Linux/makefile clean
-make -f Makefiles/Linux/makefile liborch90.so
+make -f makefiles/Linux/makefile clean
+make -f makefiles/Linux/makefile liborch90.so
 cp liborch90.so ../CoCo
 cd ..
