@@ -40,9 +40,12 @@ This file is part of VCC (Virtual Color Computer).
 #define u_int64_t uint64_t
 #else
 #include <sys/ioctl.h>
-// #include <linux/fd.h>
-// #include <linux/fdreg.h>
+#ifdef __linux__
+#include <linux/fd.h>
+#include <linux/fdreg.h>
 #endif
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
